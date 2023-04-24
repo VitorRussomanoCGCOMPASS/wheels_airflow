@@ -35,6 +35,9 @@ class Input(ABC):
         pass
 
 
+
+
+
 @dataclass
 class HTML(Input):
     FILE_EXTENSION = ".html"
@@ -47,6 +50,7 @@ class HTML(Input):
     def read_from_file(cls, file) -> str:
         html_file = open(file.name, "r", encoding="utf-8")
         return html_file.read()
+
 
 
 @dataclass
