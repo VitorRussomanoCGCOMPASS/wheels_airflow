@@ -42,8 +42,9 @@ class HTML(Input):
 
     def save_to_file(self, file: _TemporaryFileWrapper) -> None:
         file.write(self.html_string)
-
-    def read_from_file(self, file) -> str:
+    
+    @classmethod
+    def read_from_file(cls, file) -> str:
         html_file = open(file.name, "r", encoding="utf-8")
         return html_file.read()
 
@@ -55,8 +56,9 @@ class JSON(Input):
 
     def save_to_file(self, file: _TemporaryFileWrapper) -> None:
         json.dump(self.values, file)
-
-    def read_from_file(self, file):
+    
+    @classmethod
+    def read_from_file(cls, file):
         return json.load(file)
 
 
@@ -69,7 +71,8 @@ class YAML(Input):
     def save_to_file(self, file: _TemporaryFileWrapper) -> None:
         yaml.dump(self.values, file)
 
-    def read_from_file(self, file):
+    @classmethod
+    def read_from_file(cls, file):
         return yaml.safe_load(file.name)
 
 
