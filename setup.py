@@ -7,6 +7,6 @@ setuptools.setup(
     author="VitorRussomanoCGCOMPASS",
     author_email="VitorIbanez@cgcompass.com",
     packages=[
-        "abstract_objs",
+        "FileObjects",
     ],
 )
