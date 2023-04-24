@@ -35,9 +35,6 @@ class Input(ABC):
         pass
 
 
-
-
-
 @dataclass
 class HTML(Input):
     FILE_EXTENSION = ".html"
@@ -45,12 +42,11 @@ class HTML(Input):
 
     def save_to_file(self, file: _TemporaryFileWrapper) -> None:
         file.write(self.html_string)
-    
+
     @classmethod
     def read_from_file(cls, file) -> str:
         html_file = open(file.name, "r", encoding="utf-8")
         return html_file.read()
-
 
 
 @dataclass
@@ -60,7 +56,7 @@ class JSON(Input):
 
     def save_to_file(self, file: _TemporaryFileWrapper) -> None:
         json.dump(self.values, file)
-    
+
     @classmethod
     def read_from_file(cls, file):
         return json.load(file)
@@ -97,7 +93,7 @@ class SQLSource(JSON):
         return self.convert_type(row, stringify_dict=self.stringify_dict)
 
     def save_to_file(self, file: _TemporaryFileWrapper) -> None:
-        json.dumps(self.values, default=self.convert_types)
+        json.dump(self.values, fp=file, default=self.convert_types)
 
 
 import datetime
