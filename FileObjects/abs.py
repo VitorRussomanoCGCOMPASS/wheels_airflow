@@ -52,10 +52,10 @@ class HTML(Input):
 @dataclass
 class JSON(Input):
     FILE_EXTENSION = ".json"
-    values: Any
+    values: str
 
     def save_to_file(self, file: _TemporaryFileWrapper) -> None:
-        json.dump(self.values, file)
+        file.write(self.values)
 
     @classmethod
     def read_from_file(cls, file):
@@ -67,7 +67,6 @@ class YAML(Input):
     FILE_EXTENSION = (".yml", ".yaml")
     values: Any
 
-    # FIXME : SELF.VALUES WONT WORK HERE.
     def save_to_file(self, file: _TemporaryFileWrapper) -> None:
         yaml.dump(self.values, file)
 
@@ -93,7 +92,8 @@ class SQLSource(JSON):
         return self.convert_type(row, stringify_dict=self.stringify_dict)
 
     def save_to_file(self, file: _TemporaryFileWrapper) -> None:
-        json.dump(self.values, fp=file, default=self.convert_types)
+        json_formatted = json.dumps(self.values, default=self.convert_types)
+        file.write(json_formatted)
 
 
 import datetime
