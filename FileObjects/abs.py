@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from tempfile import _TemporaryFileWrapper
 from typing import Any, List, Optional, Text, Union
+import logging
 
 import yaml
 
@@ -58,7 +59,7 @@ class JSON(Input):
         file.write(self.values)
 
     @classmethod
-    def read_from_file(cls, file):
+    def read_from_file(cls, file: _TemporaryFileWrapper):
         return json.load(file)
 
 
@@ -84,6 +85,10 @@ class ExpectationFile(YAML):
 class SQLSource(JSON):
     stringify_dict: bool
 
+    def __post_init__(self) -> None:
+        logging.info('Using custom serialization.')
+        self.json_formatted = json.dumps(self.values, default=self.convert_types)
+
     @abstractclassmethod
     def convert_type(self, value, **kwargs) -> None:
         """Convert a value from DBAPI to output-friendly formats."""
@@ -92,8 +97,7 @@ class SQLSource(JSON):
         return self.convert_type(row, stringify_dict=self.stringify_dict)
 
     def save_to_file(self, file: _TemporaryFileWrapper) -> None:
-        json_formatted = json.dumps(self.values, default=self.convert_types)
-        file.write(json_formatted)
+        file.write(self.json_formatted)
 
 
 import datetime
